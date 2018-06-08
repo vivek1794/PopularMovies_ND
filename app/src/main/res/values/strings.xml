@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">@string/movie_database_title</string>
+
+    <string name="movie_database_title">Movie Database</string>
+
+    <!-- Subtitle strings-->
+    <string name="popular_movies_subtitle">Showing popular movies</string>
+    <string name="top_movies_subtitle">Showing top rated movies</string>
+    <string name="fav_movies_subtitle">Showing favourite movies</string>
+
+    <!-- content descriptions-->
+    <string name="filter_movies_icon_content_description">Filter movies icon</string>
+
+</resources>
