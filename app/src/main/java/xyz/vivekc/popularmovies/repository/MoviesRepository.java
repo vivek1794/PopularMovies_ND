@@ -8,6 +8,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import xyz.vivekc.popularmovies.model.ListResponse;
+import xyz.vivekc.popularmovies.model.moviedetails.MovieDetails;
 import xyz.vivekc.popularmovies.repository.api.ApiResponse;
 import xyz.vivekc.popularmovies.repository.api.ApiService;
 
@@ -38,12 +39,24 @@ public class MoviesRepository {
         return liveData;
     }
 
+    public LiveData<ApiResponse<MovieDetails>> getMovieDetails(int movieId,String apiKey) {
+        final MutableLiveData<ApiResponse<MovieDetails>> liveData = new MutableLiveData<>();
+
+        //initially send the loading state with no data and error message
+        ApiResponse<MovieDetails> apiResponse = new ApiResponse<>();
+        apiResponse.currentState = ApiResponse.State.LOADING;
+        liveData.setValue(apiResponse);
+
+        ApiService.getApiService().getMovieDetails(movieId,"casts" ,apiKey).enqueue(new CustomCallback<>(liveData));
+        return liveData;
+    }
+
 
     class CustomCallback<T> implements Callback<T> {
 
         MutableLiveData<ApiResponse<T>> liveData;
 
-        public CustomCallback(MutableLiveData<ApiResponse<T>> liveData) {
+        CustomCallback(MutableLiveData<ApiResponse<T>> liveData) {
             this.liveData = liveData;
         }
 

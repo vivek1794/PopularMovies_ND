@@ -1,7 +1,6 @@
 package xyz.vivekc.popularmovies.ui.listscreen.view;
 
 import android.arch.lifecycle.LiveData;
-import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
@@ -17,7 +16,6 @@ import android.view.ViewGroup;
 import xyz.vivekc.popularmovies.R;
 import xyz.vivekc.popularmovies.databinding.MoviesListFragmentBinding;
 import xyz.vivekc.popularmovies.model.ListResponse;
-import xyz.vivekc.popularmovies.model.MovieItem;
 import xyz.vivekc.popularmovies.repository.api.ApiResponse;
 import xyz.vivekc.popularmovies.ui.detailsscreen.view.DetailsActivity;
 import xyz.vivekc.popularmovies.ui.listscreen.adapter.MovieListingAdapter;
@@ -64,12 +62,9 @@ public class MoviesListFragment extends Fragment {
         binding.moviesListingGrid.setLayoutManager(new GridLayoutManager(getActivity(), 2));
         adapter = new MovieListingAdapter(getActivity());
         binding.moviesListingGrid.setAdapter(adapter);
-        adapter.setItemClickListener(new MovieListingAdapter.MovieItemSelectedListener() {
-            @Override
-            public void onMovieItemSelected(MovieItem movieItem) {
-                Intent detailsPage = DetailsActivity.getDetailsPage(getActivity());
-                startActivity(detailsPage);
-            }
+        adapter.setItemClickListener(movieItem -> {
+            Intent detailsPage = DetailsActivity.getDetailsPage(getActivity(), movieItem);
+            startActivity(detailsPage);
         });
     }
 
@@ -91,14 +86,11 @@ public class MoviesListFragment extends Fragment {
         }
 
         if (movies != null) {
-            movies.observe(this, new Observer<ApiResponse<ListResponse>>() {
-                @Override
-                public void onChanged(@Nullable ApiResponse<ListResponse> apiResponse) {
-                    if (apiResponse != null) {
-                        if (apiResponse.currentState == ApiResponse.State.SUCCESS) {
-                            //success
-                            adapter.setMovieItems(apiResponse.data.results);
-                        }
+            movies.observe(this, apiResponse -> {
+                if (apiResponse != null) {
+                    if (apiResponse.currentState == ApiResponse.State.SUCCESS) {
+                        //success
+                        adapter.setMovieItems(apiResponse.data.results);
                     }
                 }
             });
@@ -106,41 +98,32 @@ public class MoviesListFragment extends Fragment {
     }
 
     private void setupFilter() {
-        binding.filterIcon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int visibility = binding.filterUi.getVisibility();
-                if (visibility == View.VISIBLE) {
-                    //make it gone now
-                    binding.filterUi.setVisibility(View.GONE);
-                } else {
-                    binding.filterUi.setVisibility(View.VISIBLE);
-                }
+        binding.filterIcon.setOnClickListener(v -> {
+            int visibility = binding.filterUi.getVisibility();
+            if (visibility == View.VISIBLE) {
+                //make it gone now
+                binding.filterUi.setVisibility(View.GONE);
+            } else {
+                binding.filterUi.setVisibility(View.VISIBLE);
             }
         });
 
-        binding.popularFilmsFilter.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mode = CurrentMode.POPULAR;
-                binding.movieDatabaseSubtitle.setText(R.string.popular_movies_subtitle);
-                binding.popularFilmsFilter.setBackgroundResource(R.drawable.bottom_underline_selected_bg);
-                binding.topRatedFilmsFilter.setBackground(null);
-                binding.favFilmFilter.setBackground(null);
-                fetchData();
-            }
+        binding.popularFilmsFilter.setOnClickListener(v -> {
+            mode = CurrentMode.POPULAR;
+            binding.movieDatabaseSubtitle.setText(R.string.popular_movies_subtitle);
+            binding.popularFilmsFilter.setBackgroundResource(R.drawable.bottom_underline_selected_bg);
+            binding.topRatedFilmsFilter.setBackground(null);
+            binding.favFilmFilter.setBackground(null);
+            fetchData();
         });
 
-        binding.topRatedFilmsFilter.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mode = CurrentMode.TOPRATED;
-                binding.movieDatabaseSubtitle.setText(R.string.top_movies_subtitle);
-                binding.topRatedFilmsFilter.setBackgroundResource(R.drawable.bottom_underline_selected_bg);
-                binding.popularFilmsFilter.setBackground(null);
-                binding.favFilmFilter.setBackground(null);
-                fetchData();
-            }
+        binding.topRatedFilmsFilter.setOnClickListener(v -> {
+            mode = CurrentMode.TOPRATED;
+            binding.movieDatabaseSubtitle.setText(R.string.top_movies_subtitle);
+            binding.topRatedFilmsFilter.setBackgroundResource(R.drawable.bottom_underline_selected_bg);
+            binding.popularFilmsFilter.setBackground(null);
+            binding.favFilmFilter.setBackground(null);
+            fetchData();
         });
     }
 }

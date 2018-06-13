@@ -22,6 +22,10 @@ public class ApiService {
         return "http://image.tmdb.org/t/p/w185//"+posterPath;
     }
 
+    public static String getCastProfileImage(String profilePath) {
+        return "http://image.tmdb.org/t/p/w92//"+profilePath;
+    }
+
     public static String getBackdropImageUrl(String backdropPath) {
         return "http://image.tmdb.org/t/p/w342//"+backdropPath;
     }
