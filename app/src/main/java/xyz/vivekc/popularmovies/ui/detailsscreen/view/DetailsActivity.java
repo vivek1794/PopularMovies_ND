@@ -14,17 +14,17 @@ public class DetailsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.details_activity);
-        MovieItem item = ((MovieItem) getIntent().getSerializableExtra("movie"));
+        int movieId = getIntent().getIntExtra("movie_id",0);
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.container, DetailsFragment.newInstance())
+                    .replace(R.id.container, DetailsFragment.newInstance(movieId))
                     .commitNow();
         }
     }
 
     public static Intent getDetailsPage(Context context, MovieItem item) {
         Intent i = new Intent(context, DetailsActivity.class);
-        i.putExtra("movie", item);
+        i.putExtra("movie_id", item.id);
         return i;
     }
 }

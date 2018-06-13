@@ -19,8 +19,21 @@ public class DetailsFragment extends Fragment {
     private DetailsViewModel viewModel;
     DetailsFragmentBinding binding;
 
-    public static DetailsFragment newInstance() {
-        return new DetailsFragment();
+    public static DetailsFragment newInstance(int movieId) {
+        DetailsFragment frag = new DetailsFragment();
+        Bundle bundle = new Bundle();
+        bundle.putInt("movie_id", movieId);
+        frag.setArguments(bundle);
+        return frag;
+    }
+
+    private static int getMovieIdFromArgs(Bundle args) {
+        if (args != null) {
+            return args.getInt("movie_id");
+        }
+        else {
+            return 0;
+        }
     }
 
     @Nullable
