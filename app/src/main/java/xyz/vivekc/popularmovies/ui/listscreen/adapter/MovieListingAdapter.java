@@ -1,4 +1,4 @@
-package xyz.vivekc.popularmovies.ui.listscreen.ui.movieslist;
+package xyz.vivekc.popularmovies.ui.listscreen.adapter;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -18,10 +18,15 @@ import xyz.vivekc.popularmovies.R;
 import xyz.vivekc.popularmovies.model.MovieItem;
 import xyz.vivekc.popularmovies.repository.api.ApiService;
 
-class MovieListingAdapter extends RecyclerView.Adapter<MovieListingAdapter.MoviePosterViewHolder> {
+public class MovieListingAdapter extends RecyclerView.Adapter<MovieListingAdapter.MoviePosterViewHolder> {
 
     List<MovieItem> movieItems;
     Context context;
+    MovieItemSelectedListener listener;
+
+    public interface MovieItemSelectedListener {
+        public void onMovieItemSelected(MovieItem movieItem);
+    }
 
     public MovieListingAdapter(Context context) {
         this.context = context;
@@ -31,6 +36,10 @@ class MovieListingAdapter extends RecyclerView.Adapter<MovieListingAdapter.Movie
     public void setMovieItems(List<MovieItem> movieItems) {
         this.movieItems = movieItems;
         notifyDataSetChanged();
+    }
+
+    public void setItemClickListener(MovieItemSelectedListener movieItemSelectedListener) {
+        this.listener = movieItemSelectedListener;
     }
 
     @NonNull
@@ -44,11 +53,18 @@ class MovieListingAdapter extends RecyclerView.Adapter<MovieListingAdapter.Movie
 
     @Override
     public void onBindViewHolder(@NonNull MoviePosterViewHolder holder, int position) {
-        MovieItem item = movieItems.get(position);
+        final MovieItem item = movieItems.get(position);
         Glide.with(context)
                 .load(ApiService.getImageUrl(item.posterPath))
                 .transition(DrawableTransitionOptions.withCrossFade())
                 .into(holder.posterView);
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                listener.onMovieItemSelected(item);
+            }
+        });
     }
 
     @Override

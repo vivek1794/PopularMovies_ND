@@ -21,4 +21,8 @@ public class ApiService {
     public static String getImageUrl(String posterPath) {
         return "http://image.tmdb.org/t/p/w185//"+posterPath;
     }
+
+    public static String getBackdropImageUrl(String backdropPath) {
+        return "http://image.tmdb.org/t/p/w342//"+backdropPath;
+    }
 }

@@ -4,9 +4,10 @@ package xyz.vivekc.popularmovies.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class MovieItem {
+public class MovieItem implements Serializable {
 
     @SerializedName("vote_count")
     @Expose

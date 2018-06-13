@@ -37,4 +37,16 @@ dependencies {
     implementation 'android.arch.lifecycle:extensions:1.1.1'
     implementation 'com.github.bumptech.glide:glide:4.7.1'
     implementation 'com.android.support:design:27.1.1'
+
+//    debugCompile ('com.facebook.sonar:sonar:0.0.1') {
+//        exclude group: 'com.android.support'
+//    }
+
 }
+//
+//configurations.all {
+//    resolutionStrategy {
+//        force "com.android.support:appcompat-v7:27.1.1"
+//        force "com.android.support:support-v4:27.1.1"
+//    }
+//}

@@ -1,10 +1,9 @@
-package xyz.vivekc.popularmovies.ui.listscreen.ui.movieslist;
+package xyz.vivekc.popularmovies.ui.listscreen.view;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 import xyz.vivekc.popularmovies.R;
-import xyz.vivekc.popularmovies.ui.listscreen.ui.movieslist.MoviesListFragment;
 
 public class MoviesListActivity extends AppCompatActivity {
 

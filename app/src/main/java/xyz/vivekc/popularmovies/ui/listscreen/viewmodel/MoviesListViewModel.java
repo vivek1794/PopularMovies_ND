@@ -1,4 +1,4 @@
-package xyz.vivekc.popularmovies.ui.listscreen.ui.movieslist;
+package xyz.vivekc.popularmovies.ui.listscreen.viewmodel;
 
 import android.app.Application;
 import android.arch.lifecycle.LiveData;
@@ -15,11 +15,11 @@ public class MoviesListViewModel extends BaseViewModel {
         super(application);
     }
 
-    LiveData<ApiResponse<ListResponse>> getPopularMovies(int pageNumber) {
+    public LiveData<ApiResponse<ListResponse>> getPopularMovies(int pageNumber) {
         return repository.getPopularMovies(pageNumber, getApplication().getString(R.string.api_key));
     }
 
-    LiveData<ApiResponse<ListResponse>> getTopRatedMovies(int pageNumber) {
+    public LiveData<ApiResponse<ListResponse>> getTopRatedMovies(int pageNumber) {
         return repository.getTopRatedMovies(pageNumber, getApplication().getString(R.string.api_key));
     }
 

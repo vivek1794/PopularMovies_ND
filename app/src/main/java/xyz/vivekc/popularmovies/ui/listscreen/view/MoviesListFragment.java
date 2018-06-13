@@ -1,8 +1,9 @@
-package xyz.vivekc.popularmovies.ui.listscreen.ui.movieslist;
+package xyz.vivekc.popularmovies.ui.listscreen.view;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -16,7 +17,11 @@ import android.view.ViewGroup;
 import xyz.vivekc.popularmovies.R;
 import xyz.vivekc.popularmovies.databinding.MoviesListFragmentBinding;
 import xyz.vivekc.popularmovies.model.ListResponse;
+import xyz.vivekc.popularmovies.model.MovieItem;
 import xyz.vivekc.popularmovies.repository.api.ApiResponse;
+import xyz.vivekc.popularmovies.ui.detailsscreen.view.DetailsActivity;
+import xyz.vivekc.popularmovies.ui.listscreen.adapter.MovieListingAdapter;
+import xyz.vivekc.popularmovies.ui.listscreen.viewmodel.MoviesListViewModel;
 
 
 public class MoviesListFragment extends Fragment {
@@ -59,6 +64,13 @@ public class MoviesListFragment extends Fragment {
         binding.moviesListingGrid.setLayoutManager(new GridLayoutManager(getActivity(), 2));
         adapter = new MovieListingAdapter(getActivity());
         binding.moviesListingGrid.setAdapter(adapter);
+        adapter.setItemClickListener(new MovieListingAdapter.MovieItemSelectedListener() {
+            @Override
+            public void onMovieItemSelected(MovieItem movieItem) {
+                Intent detailsPage = DetailsActivity.getDetailsPage(getActivity());
+                startActivity(detailsPage);
+            }
+        });
     }
 
     private void fetchData() {
