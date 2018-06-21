@@ -7,6 +7,7 @@ import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;
 import java.util.List;
 
+@SuppressWarnings("WeakerAccess")
 public class MovieItem implements Serializable {
 
     @SerializedName("vote_count")

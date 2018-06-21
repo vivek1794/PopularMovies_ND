@@ -4,5 +4,7 @@
     <color name="colorPrimaryDark">#E0E0E0</color>
     <color name="colorAccent">#80000000</color>
     <color name="black">#000000</color>
+    <color name="tab_underline_black">#AA000000</color>
+    <color name="chip_outline">#32000000</color>
     <color name="white">#ffffff</color>
 </resources>

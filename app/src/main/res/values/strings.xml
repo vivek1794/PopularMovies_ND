@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">@string/movie_database_title</string>
 
-    <string name="movie_database_title">Movie Database</string>
+    <string name="movie_database_title">MovieMania</string>
 
     <!-- Subtitle strings-->
     <string name="popular_movies_subtitle">Showing popular movies</string>

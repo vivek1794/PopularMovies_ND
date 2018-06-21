@@ -3,7 +3,6 @@ package xyz.vivekc.popularmovies.ui.detailsscreen.view;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.ViewModelProviders;
 import android.databinding.DataBindingUtil;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -12,18 +11,19 @@ import android.support.v7.widget.GridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.DataSource;
-import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
-import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.target.Target;
 
 import java.util.List;
 
 import xyz.vivekc.popularmovies.R;
 import xyz.vivekc.popularmovies.databinding.DetailsFragmentBinding;
+import xyz.vivekc.popularmovies.model.MovieItem;
 import xyz.vivekc.popularmovies.model.moviedetails.MovieDetails;
 import xyz.vivekc.popularmovies.repository.api.ApiResponse;
 import xyz.vivekc.popularmovies.repository.api.ApiService;
@@ -32,23 +32,34 @@ import xyz.vivekc.popularmovies.ui.detailsscreen.viewmodel.DetailsViewModel;
 
 public class DetailsFragment extends Fragment {
 
+    //MVVM and databinding stuff
     private DetailsViewModel viewModel;
     DetailsFragmentBinding binding;
+    public static final String MOVIE_ID = "movie_id";
+    public static final String MOVIE = "movie";
 
-    public static DetailsFragment newInstance(int movieId) {
+    //Util method to return instance of fragment.
+    public static DetailsFragment newInstance(MovieItem movie) {
         DetailsFragment frag = new DetailsFragment();
         Bundle bundle = new Bundle();
-        bundle.putInt("movie_id", movieId);
+        bundle.putInt(MOVIE_ID, movie.id);
+        bundle.putSerializable(MOVIE, movie);
         frag.setArguments(bundle);
         return frag;
     }
 
+    /**
+     * Method to return MovieId from the arguments
+     */
     private static int getMovieIdFromArgs(Bundle args) {
-        if (args != null) {
-            return args.getInt("movie_id");
-        } else {
-            return 0;
-        }
+        return args.getInt(MOVIE_ID);
+    }
+
+    /**
+     * Method to return Movie instance from arguments
+     */
+    private static MovieItem getMovieFromArgs(Bundle args) {
+        return ((MovieItem) args.getSerializable(MOVIE));
     }
 
     @Nullable
@@ -56,6 +67,7 @@ public class DetailsFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
 
+        //inflating the views
         binding = DataBindingUtil.inflate(inflater, R.layout.details_fragment, container, false);
         return binding.getRoot();
     }
@@ -63,38 +75,131 @@ public class DetailsFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        viewModel = ViewModelProviders.of(this).get(DetailsViewModel.class);
-        binding.setDetailsViewModel(viewModel);
 
-        LiveData<ApiResponse<MovieDetails>> detailsLiveData = viewModel.getMovieDetails(getMovieIdFromArgs(getArguments()));
+        setUpEntryTransition();
+        setUpViewModel();
+        setUpUI();
+    }
 
-        detailsLiveData.observe(this, movieDetailsApiResponse -> {
-            if (movieDetailsApiResponse != null) {
-                switch (movieDetailsApiResponse.currentState) {
-                    case SUCCESS: {
-                        populateUI(movieDetailsApiResponse.data);
-                        break;
-                    }
-                }
+    /**
+     * Method to take care of the Shared element entry transition
+     */
+    private void setUpEntryTransition() {
+        //set the transitionName so that the shared element transition would work
+        if (getArguments() != null) {
+            binding.movieThumb.setTransitionName(String.valueOf(getMovieIdFromArgs(getArguments())));
+        }
+
+        //Now the fragment is loaded, we can resume the postponed shared element transition
+        binding.movieThumb.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+            @Override
+            public boolean onPreDraw() {
+                binding.movieThumb.getViewTreeObserver().removeOnPreDrawListener(this);
+                //resume the transition
+                requireActivity().startPostponedEnterTransition();
+                return true;
             }
         });
     }
 
-    private void populateUI(MovieDetails movieDetails) {
-
-        loadImages(movieDetails, () -> {
-            binding.details.setVisibility(View.VISIBLE);
-            binding.movieTitle.setText(movieDetails.title);
-            binding.plotSummaryText.setText(movieDetails.overview);
-            binding.movieGenreList.setText(viewModel.getGenresList(movieDetails));
-            binding.movieUserRating.setText(String.valueOf(movieDetails.voteAverage));
-            binding.movieReleaseDate.setText(movieDetails.releaseDate);
-
-            setupCastsGrid(movieDetails.casts.cast);
-        });
-
+    /**
+     * Method to create the ViewModel and set it to Binding variable
+     */
+    private void setUpViewModel() {
+        viewModel = ViewModelProviders.of(this).get(DetailsViewModel.class);
+        binding.setDetailsViewModel(viewModel);
     }
 
+    /**
+     * The method which takes care of all the UI works.
+     * This would initially load the data available from the intent extras and fragment bundle.
+     * It would also initiate API call to get data regarding the Genre and cast details
+     */
+    private void setUpUI() {
+        if (getArguments() != null) {
+            populateUIFromArgs(getMovieFromArgs(getArguments()));
+            fetchGenreAndCastDetails();
+        }
+    }
+
+
+    /**
+     * Populate UI from the MovieItem class instance received.
+     * We will get the image URLs, movie title, release dates, summary and user ratings
+     *
+     * @param movieItem MovieItem instance
+     */
+    private void populateUIFromArgs(MovieItem movieItem) {
+        loadImage(movieItem.backdropPath, ApiService.ImageSize.BACKDROP_SIZE, binding.moviePoster);
+        loadImage(movieItem.posterPath, ApiService.ImageSize.POSTER_SIZE, binding.movieThumb);
+
+        viewModel.setMovieDetails(movieItem);
+    }
+
+
+    /**
+     * Load the image of given size to the given imageview
+     */
+    private void loadImage(String imagePath, ApiService.ImageSize imageSize, ImageView imageView) {
+        Glide.with(requireContext())
+                .load(ApiService.getImageUrl(imagePath, imageSize))
+                .transition(DrawableTransitionOptions.withCrossFade())
+                .into(imageView);
+    }
+
+    /**
+     * Fetch the Genre and Cast from Movie Details
+     */
+    private void fetchGenreAndCastDetails() {
+        LiveData<ApiResponse<MovieDetails>> detailsLiveData;
+        if (getArguments() != null) {
+            detailsLiveData = viewModel.getMovieDetails(getMovieIdFromArgs(getArguments()));
+            detailsLiveData.observe(this, movieDetailsApiResponse -> {
+                if (movieDetailsApiResponse != null) {
+                    switch (movieDetailsApiResponse.currentState) {
+                        case LOADING: {
+                            break;
+                        }
+                        case SUCCESS: {
+                            populateUIFromApi(movieDetailsApiResponse.data);
+                            break;
+                        }
+                        case ERROR:
+                        case FAILURE: {
+                            break;
+                        }
+
+                    }
+                }
+            });
+        }
+    }
+
+    /**
+     * Populating the UI from the api MovieDetails
+     */
+    private void populateUIFromApi(MovieDetails movieDetails) {
+        binding.genreTitle.setVisibility(View.VISIBLE);
+        binding.genreList.setVisibility(View.VISIBLE);
+        binding.castTitle.setVisibility(View.VISIBLE);
+        setupGenreList(binding.genreContainer, movieDetails.genres);
+        setupCastsGrid(movieDetails.casts.cast);
+    }
+
+    /**
+     * Method to create multiple TextViews to inflate the Genres
+     */
+    private void setupGenreList(LinearLayout genreContainer, List<MovieDetails.Genre> genres) {
+        for (MovieDetails.Genre genre : genres) {
+            TextView genreTV = (TextView) LayoutInflater.from(requireContext()).inflate(R.layout.genre_chip_layout, genreContainer, false);
+            genreTV.setText(genre.name);
+            genreContainer.addView(genreTV);
+        }
+    }
+
+    /**
+     * Method to setup the casts grid adapter
+     */
     private void setupCastsGrid(List<MovieDetails.Cast> cast) {
         CastsAdapter adapter = new CastsAdapter(requireContext());
         adapter.setCastList(cast);
@@ -102,48 +207,4 @@ public class DetailsFragment extends Fragment {
         binding.castsGridView.setLayoutManager(new GridLayoutManager(requireContext(), 3));
     }
 
-    private void loadImages(MovieDetails movieDetails, ImageLoadCompletedListener listener) {
-
-        //we load the images first and then make the UI visible. This will make the UI complete when it appears
-        //only the backdropimage and the posterimage are loaded upfront.
-        Glide.with(requireContext())
-                .load(ApiService.getBackdropImageUrl(movieDetails.backdropPath))
-                .transition(DrawableTransitionOptions.withCrossFade())
-                .listener(new CustomGlideListener() {
-                    @Override
-                    public void onImageLoaded() {
-                        Glide.with(requireContext())
-                                .load(ApiService.getImageUrl(movieDetails.posterPath))
-                                .transition(DrawableTransitionOptions.withCrossFade())
-                                .listener(new CustomGlideListener() {
-                                    @Override
-                                    public void onImageLoaded() {
-                                        listener.onImagesLoaded();
-                                    }
-                                })
-                                .into(binding.movieThumb);
-                    }
-                })
-                .into(binding.moviePoster);
-    }
-
-    interface ImageLoadCompletedListener {
-        public void onImagesLoaded();
-    }
-
-    abstract class CustomGlideListener implements RequestListener<Drawable> {
-
-        @Override
-        public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-            return false;
-        }
-
-        @Override
-        public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-            onImageLoaded();
-            return false;
-        }
-
-        abstract public void onImageLoaded();
-    }
 }

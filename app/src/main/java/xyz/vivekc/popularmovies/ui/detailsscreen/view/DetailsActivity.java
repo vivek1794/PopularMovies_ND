@@ -14,7 +14,18 @@ public class DetailsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.details_activity);
-        int movieId = getIntent().getIntExtra("movie_id",0);
+        //we receive the movie details from the intent extra
+        MovieItem movieId = ((MovieItem) getIntent().getSerializableExtra("movie"));
+
+        //to do shared element transition from the listing activity to view in the DetailsFragment,
+        //we need the fragment to be loaded before animations are done
+        //so, we postpone the enter transitions until fragment is alive
+        postponeEnterTransition();
+
+        //we do not do anything in the activity. Everything is taken care of by the fragment
+        //this is great if we want to reuse the UI across the app
+        //also, with the upcoming Navigation pattern introduced this I/O, having all UI in fragments
+        //would be easier to migrate when it reaches stable version
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.container, DetailsFragment.newInstance(movieId))
@@ -24,7 +35,8 @@ public class DetailsActivity extends AppCompatActivity {
 
     public static Intent getDetailsPage(Context context, MovieItem item) {
         Intent i = new Intent(context, DetailsActivity.class);
-        i.putExtra("movie_id", item.id);
+        i.putExtra("movie", item);
+        i.putExtra("transition_name", item.id);
         return i;
     }
 }

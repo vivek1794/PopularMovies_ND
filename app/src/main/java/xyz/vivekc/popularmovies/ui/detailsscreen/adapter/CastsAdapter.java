@@ -1,13 +1,11 @@
 package xyz.vivekc.popularmovies.ui.detailsscreen.adapter;
 
 import android.content.Context;
+import android.databinding.DataBindingUtil;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
@@ -17,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import xyz.vivekc.popularmovies.R;
+import xyz.vivekc.popularmovies.databinding.CastItemBinding;
 import xyz.vivekc.popularmovies.model.moviedetails.MovieDetails;
 import xyz.vivekc.popularmovies.repository.api.ApiService;
 
@@ -39,28 +38,15 @@ public class CastsAdapter extends RecyclerView.Adapter<CastsAdapter.CastViewHold
     @NonNull
     @Override
     public CastViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new CastViewHolder(
-                LayoutInflater
-                        .from(parent.getContext())
-                        .inflate(R.layout.cast_item, parent, false));
+        CastItemBinding itemBinding = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext()),
+                R.layout.cast_item, parent, false);
+        return new CastViewHolder(itemBinding);
     }
 
     @Override
     public void onBindViewHolder(@NonNull CastViewHolder holder, int position) {
         final MovieDetails.Cast item = castList.get(position);
-
-        if (item.profilePath == null) {
-            holder.profileView.setImageResource(R.drawable.empty_user_avatar);
-        } else {
-            Glide.with(context)
-                    .load(ApiService.getImageUrl(item.profilePath))
-                    .apply(RequestOptions.circleCropTransform())
-                    .transition(DrawableTransitionOptions.withCrossFade())
-                    .into(holder.profileView);
-        }
-
-        holder.actorName.setText(item.name);
-        holder.characterName.setText(item.character);
+        holder.bind(item);
     }
 
     @Override
@@ -69,16 +55,30 @@ public class CastsAdapter extends RecyclerView.Adapter<CastsAdapter.CastViewHold
     }
 
     class CastViewHolder extends RecyclerView.ViewHolder {
+        CastItemBinding binding;
 
-        ImageView profileView;
-        TextView actorName;
-        TextView characterName;
+        CastViewHolder(CastItemBinding itemBinding) {
+            super(itemBinding.getRoot());
+            this.binding = itemBinding;
+        }
 
-        public CastViewHolder(View itemView) {
-            super(itemView);
-            profileView = itemView.findViewById(R.id.profile_image);
-            characterName = itemView.findViewById(R.id.actor_character_name);
-            actorName = itemView.findViewById(R.id.actor_name);
+        void bind(MovieDetails.Cast item) {
+
+            //set default icon if image is not available
+            if (item.profilePath == null) {
+                binding.profileImage.setImageResource(R.drawable.empty_user_avatar);
+            } else {
+                //load the image
+                Glide.with(context)
+                        .load(ApiService.getImageUrl(item.profilePath, ApiService.ImageSize.AVATAR_SIZE))
+                        .apply(RequestOptions.circleCropTransform())
+                        .transition(DrawableTransitionOptions.withCrossFade())
+                        .into(binding.profileImage);
+            }
+
+            //set the actor name and character name
+            binding.actorName.setText(item.name);
+            binding.actorCharacterName.setText(item.character);
         }
     }
 }

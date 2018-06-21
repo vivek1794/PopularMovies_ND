@@ -22,6 +22,14 @@
             tools:context=".ui.details.DetailsFragment"
             tools:visibility="visible">
 
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/back_button"
+                android:layout_marginTop="16dp"
+                android:layout_marginStart="16dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
 
             <ImageView
                 android:id="@+id/movie_poster"
@@ -66,55 +74,55 @@
                         android:id="@+id/movie_title"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
                         android:layout_marginTop="15dp"
-                        android:textSize="@dimen/subtitle_text_size"
+                        android:layout_marginEnd="5dp"
+                        android:gravity="center"
+                        android:textSize="24sp"
                         android:textStyle="bold"
+                        app:layout_constraintBottom_toTopOf="@+id/movie_release_date"
                         app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintVertical_chainStyle="packed"
                         app:layout_constraintStart_toEndOf="@+id/movie_thumb"
                         app:layout_constraintTop_toTopOf="parent"
                         tools:text="Avengers Infinity War" />
 
-                    <TextView
-                        android:id="@+id/movie_genre_list"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="5dp"
-                        android:alpha="0.7"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toEndOf="@+id/movie_thumb"
-                        app:layout_constraintTop_toBottomOf="@+id/movie_title"
-                        tools:text="Adventure, SciFi, Fantasy, Action" />
 
                     <TextView
                         android:id="@+id/movie_release_date"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="5dp"
+                        android:layout_marginTop="15dp"
                         android:alpha="0.7"
+                        android:gravity="center"
+                        app:layout_constraintBottom_toTopOf="@+id/movie_user_rating"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toEndOf="@+id/movie_thumb"
-                        app:layout_constraintTop_toBottomOf="@+id/movie_genre_list"
+                        app:layout_constraintTop_toBottomOf="@+id/movie_title"
                         tools:text="10 May, 2018" />
 
                     <ImageView
                         android:id="@+id/star_rating_icon"
                         android:layout_width="16dp"
                         android:layout_height="16dp"
-                        android:layout_marginTop="10dp"
                         android:alpha="0.7"
                         android:src="@drawable/star_rating"
+                        app:layout_constraintBottom_toBottomOf="@+id/movie_user_rating"
+                        app:layout_constraintEnd_toStartOf="@+id/movie_user_rating"
+                        app:layout_constraintHorizontal_chainStyle="packed"
                         app:layout_constraintStart_toEndOf="@+id/movie_thumb"
-                        app:layout_constraintTop_toBottomOf="@+id/movie_release_date" />
+                        app:layout_constraintTop_toTopOf="@+id/movie_user_rating" />
 
                     <TextView
                         android:id="@+id/movie_user_rating"
-                        android:layout_width="0dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="5dp"
-                        android:layout_marginTop="10dp"
+                        android:layout_marginTop="15dp"
+                        android:layout_marginBottom="8dp"
                         android:alpha="0.7"
-                        android:gravity="center_vertical"
-                        app:layout_constraintBottom_toBottomOf="@+id/star_rating_icon"
+                        android:gravity="center"
+                        app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toEndOf="@+id/star_rating_icon"
                         app:layout_constraintTop_toBottomOf="@+id/movie_release_date"
@@ -128,11 +136,28 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="20dp"
+                android:background="@drawable/bottom_underline_selected_bg"
+                android:paddingBottom="6dp"
                 android:text="Overview"
-                android:textSize="@dimen/subtitle_text_size"
+                android:textSize="22sp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/movie_details_card" />
+
+
+            <TextView
+                android:id="@+id/plot_summary"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginBottom="10dp"
+                android:text="Plot Summary"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/overview_tab" />
 
             <TextView
                 android:id="@+id/plot_summary_text"
@@ -144,31 +169,68 @@
                 android:lineSpacingExtra="6dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/overview_tab"
+                app:layout_constraintTop_toBottomOf="@+id/plot_summary"
                 tools:text="As the Avengers and their allies have continued to protect the world from threats too large for any one hero to handle, a new danger has emerged from the cosmic shadows: Thanos. A despot of intergalactic infamy, his goal is to collect all six Infinity Stones, artifacts of unimaginable power, and use them to inflict his twisted will on all of reality. " />
+
+            <TextView
+                android:id="@+id/genre_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginBottom="10dp"
+                android:text="Genres"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:visibility="gone"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/plot_summary_text" />
+
+            <HorizontalScrollView
+                android:id="@+id/genre_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginTop="15dp"
+                android:scrollbars="none"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/genre_title">
+
+                <LinearLayout
+                    android:id="@+id/genre_container"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal" />
+            </HorizontalScrollView>
 
             <TextView
                 android:id="@+id/cast_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="20dp"
+                android:paddingBottom="6dp"
                 android:text="Casts"
-                android:textSize="@dimen/subtitle_text_size"
+                android:textSize="18sp"
                 android:textStyle="bold"
+                android:visibility="gone"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/plot_summary_text" />
+                app:layout_constraintTop_toBottomOf="@+id/genre_list" />
 
 
             <android.support.v7.widget.RecyclerView
+                android:id="@+id/casts_grid_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/casts_grid_view"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/cast_title"
                 app:spanCount="3"
                 tools:layoutManager="android.support.v7.widget.GridLayoutManager"
-                tools:listitem="@layout/cast_item"/>
+                tools:listitem="@layout/cast_item" />
 
         </android.support.constraint.ConstraintLayout>
     </android.support.v4.widget.NestedScrollView>

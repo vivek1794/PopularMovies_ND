@@ -1,10 +1,11 @@
 package xyz.vivekc.popularmovies.ui.listscreen.adapter;
 
 import android.content.Context;
+import android.databinding.DataBindingUtil;
 import android.support.annotation.NonNull;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
@@ -15,17 +16,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 import xyz.vivekc.popularmovies.R;
+import xyz.vivekc.popularmovies.databinding.MoviesListingItemLayoutBinding;
 import xyz.vivekc.popularmovies.model.MovieItem;
 import xyz.vivekc.popularmovies.repository.api.ApiService;
 
 public class MovieListingAdapter extends RecyclerView.Adapter<MovieListingAdapter.MoviePosterViewHolder> {
 
-    List<MovieItem> movieItems;
-    Context context;
-    MovieItemSelectedListener listener;
+    private List<MovieItem> movieItems;
+    private Context context;
+    private MovieItemSelectedListener listener;
 
+    /**
+     * Interface to help in communicating movie item clicked to the fragment
+     */
     public interface MovieItemSelectedListener {
-        public void onMovieItemSelected(MovieItem movieItem);
+        void onMovieItemSelected(MovieItem movieItem, ImageView posterView);
     }
 
     public MovieListingAdapter(Context context) {
@@ -45,26 +50,17 @@ public class MovieListingAdapter extends RecyclerView.Adapter<MovieListingAdapte
     @NonNull
     @Override
     public MoviePosterViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new MoviePosterViewHolder(
-                LayoutInflater
-                        .from(parent.getContext())
-                        .inflate(R.layout.movies_listing_item_layout, parent, false));
+        MoviesListingItemLayoutBinding itemLayoutBinding = DataBindingUtil.inflate(
+                LayoutInflater.from(parent.getContext()),
+                R.layout.movies_listing_item_layout,
+                parent, false);
+        return new MoviePosterViewHolder(itemLayoutBinding);
     }
 
     @Override
     public void onBindViewHolder(@NonNull MoviePosterViewHolder holder, int position) {
         final MovieItem item = movieItems.get(position);
-        Glide.with(context)
-                .load(ApiService.getImageUrl(item.posterPath))
-                .transition(DrawableTransitionOptions.withCrossFade())
-                .into(holder.posterView);
-
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                listener.onMovieItemSelected(item);
-            }
-        });
+        holder.bind(item);
     }
 
     @Override
@@ -73,12 +69,25 @@ public class MovieListingAdapter extends RecyclerView.Adapter<MovieListingAdapte
     }
 
     class MoviePosterViewHolder extends RecyclerView.ViewHolder {
+        MoviesListingItemLayoutBinding binding;
 
-        ImageView posterView;
+        MoviePosterViewHolder(MoviesListingItemLayoutBinding itemBinding) {
+            super(itemBinding.getRoot());
+            this.binding = itemBinding;
+        }
 
-        public MoviePosterViewHolder(View itemView) {
-            super(itemView);
-            posterView = itemView.findViewById(R.id.poster);
+        void bind(MovieItem item) {
+            //setting the movie id as transitionName as it would be unique
+            ViewCompat.setTransitionName(binding.poster, String.valueOf(item.id));
+
+            //loading the image to imageview
+            Glide.with(context)
+                    .load(ApiService.getImageUrl(item.posterPath, ApiService.ImageSize.POSTER_SIZE))
+                    .transition(DrawableTransitionOptions.withCrossFade())
+                    .into(binding.poster);
+
+            //setting click listener
+            binding.getRoot().setOnClickListener(v -> listener.onMovieItemSelected(item, binding.poster));
         }
     }
 }

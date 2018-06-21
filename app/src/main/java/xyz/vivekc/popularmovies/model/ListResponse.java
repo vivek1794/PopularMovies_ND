@@ -5,6 +5,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
+@SuppressWarnings("WeakerAccess")
 public class ListResponse {
 
     @SerializedName("page")

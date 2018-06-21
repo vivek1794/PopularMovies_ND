@@ -2,11 +2,17 @@ package xyz.vivekc.popularmovies.ui.detailsscreen.viewmodel;
 
 import android.app.Application;
 import android.arch.lifecycle.LiveData;
+import android.databinding.ObservableField;
 import android.support.annotation.NonNull;
 
-import java.util.List;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 import xyz.vivekc.popularmovies.R;
+import xyz.vivekc.popularmovies.model.MovieItem;
 import xyz.vivekc.popularmovies.model.moviedetails.MovieDetails;
 import xyz.vivekc.popularmovies.repository.api.ApiResponse;
 import xyz.vivekc.popularmovies.ui.BaseViewModel;
@@ -17,21 +23,40 @@ public class DetailsViewModel extends BaseViewModel {
         super(application);
     }
 
+    /* ******************************************************************
+     *  UI
+     * ******************************************************************/
+
+    private ObservableField<String> movieTitle = new ObservableField<>();
+    private ObservableField<String> moviePlotSummary = new ObservableField<>();
+    private ObservableField<String> movieUserRating = new ObservableField<>();
+    private ObservableField<String> movieReleaseDate = new ObservableField<>();
+
+    public void setMovieDetails(MovieItem movieItem) {
+        movieTitle.set(movieItem.title);
+        moviePlotSummary.set(movieItem.overview);
+        movieUserRating.set(String.valueOf(movieItem.voteAverage));
+        movieReleaseDate.set(getMovieReleaseDateString(movieItem.releaseDate));
+    }
+
+    public String getMovieReleaseDateString(String releaseDate) {
+        DateFormat df = new SimpleDateFormat("yyyy-mm-dd", Locale.getDefault());
+        DateFormat outputDateFormat = new SimpleDateFormat("dd MMM, yyyy", Locale.getDefault());
+        try {
+            Date date = df.parse(releaseDate);
+            return outputDateFormat.format(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return "Not Available";
+        }
+    }
+
+    /* ******************************************************************
+     *  API works
+     * ******************************************************************/
     public LiveData<ApiResponse<MovieDetails>> getMovieDetails(int movieId) {
         return repository.getMovieDetails(movieId, getApplication().getString(R.string.api_key));
     }
 
-    public String getGenresList(MovieDetails movieDetails) {
-        List<MovieDetails.Genre> genreList = movieDetails.genres;
-        StringBuilder builder = new StringBuilder();
-        for (int i = 0; i < genreList.size(); i++) {
-            MovieDetails.Genre genre = genreList.get(i);
-            builder.append(genre.name);
-            if (i != genreList.size() - 1) {
-                //add comma for all elements except last
-                builder.append(", ");
-            }
-        }
-        return builder.toString();
-    }
+
 }

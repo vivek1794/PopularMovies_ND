@@ -2,6 +2,7 @@ package xyz.vivekc.popularmovies.ui.listscreen.viewmodel;
 
 import android.app.Application;
 import android.arch.lifecycle.LiveData;
+import android.databinding.ObservableField;
 import android.support.annotation.NonNull;
 
 import xyz.vivekc.popularmovies.R;
@@ -15,12 +16,64 @@ public class MoviesListViewModel extends BaseViewModel {
         super(application);
     }
 
-    public LiveData<ApiResponse<ListResponse>> getPopularMovies(int pageNumber) {
-        return repository.getPopularMovies(pageNumber, getApplication().getString(R.string.api_key));
+
+
+    /* ************************************************************************************
+     * UI works
+     * ************************************************************************************/
+
+    /**
+     * Enum to define which set of movies to load. This enum is used in filtering
+     * the UI grid and displaying popular or top rated or favourites (in stage2) movies
+     */
+    public enum CurrentMode {
+        POPULAR, TOPRATED, FAVOURITES
     }
 
-    public LiveData<ApiResponse<ListResponse>> getTopRatedMovies(int pageNumber) {
-        return repository.getTopRatedMovies(pageNumber, getApplication().getString(R.string.api_key));
+    private MoviesListViewModel.CurrentMode mode = MoviesListViewModel.CurrentMode.POPULAR;
+
+
+    public ObservableField<String> subTitleString = new ObservableField<>(getApplication().getResources().getString(R.string.popular_movies_subtitle));
+
+
+    public void setCurrentMode(CurrentMode mode) {
+        this.mode = mode;
+        if (mode == CurrentMode.POPULAR) {
+            subTitleString.set(getApplication().getString(R.string.popular_movies_subtitle));
+        } else if (mode == CurrentMode.TOPRATED) {
+            subTitleString.set(getApplication().getString(R.string.top_movies_subtitle));
+        }
+
+    }
+
+    /* ************************************************************************************
+     * API calls
+     * ************************************************************************************/
+
+    public LiveData<ApiResponse<ListResponse>> fetchData() {
+        LiveData<ApiResponse<ListResponse>> movies = null;
+        switch (mode) {
+            case POPULAR: {
+                movies = getPopularMovies();
+                break;
+            }
+            case TOPRATED: {
+                movies = getTopRatedMovies();
+                break;
+            }
+            case FAVOURITES: {
+                //todo NOT IMPLEMENTED FOR STAGE1
+            }
+        }
+        return movies;
+    }
+
+    private LiveData<ApiResponse<ListResponse>> getPopularMovies() {
+        return repository.getPopularMovies(1, getApplication().getString(R.string.api_key));
+    }
+
+    private LiveData<ApiResponse<ListResponse>> getTopRatedMovies() {
+        return repository.getTopRatedMovies(1, getApplication().getString(R.string.api_key));
     }
 
 }

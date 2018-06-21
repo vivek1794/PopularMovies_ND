@@ -4,8 +4,25 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ApiService {
-    public static final String TMDB_BASE_URL = "https://api.themoviedb.org/3/movie/";
+    private static final String TMDB_BASE_URL = "https://api.themoviedb.org/3/movie/";
 
+    /**
+     * Enum to specify the size of the image to be downloaded
+     */
+    public enum ImageSize {
+        POSTER_SIZE("w185"), AVATAR_SIZE("w92"), BACKDROP_SIZE("w342");
+
+        ImageSize(String imageSize) {
+            this.size = imageSize;
+        }
+
+        String size;
+    }
+
+    /**
+     * Method to return a Retrofit instance for the TMDB base url and GSON Converter
+     * @return Retrofit instance
+     */
     private static Retrofit getRetrofitInstance() {
 
         return new Retrofit.Builder()
@@ -14,19 +31,21 @@ public class ApiService {
                 .build();
     }
 
+    /**
+     * Retruns an instance of MoviesApiService using the Retrofit instance
+     * @return MoviesApiService instance to do api calls
+     */
     public static MoviesApiService getApiService() {
         return getRetrofitInstance().create(MoviesApiService.class);
     }
 
-    public static String getImageUrl(String posterPath) {
-        return "http://image.tmdb.org/t/p/w185//"+posterPath;
-    }
-
-    public static String getCastProfileImage(String profilePath) {
-        return "http://image.tmdb.org/t/p/w92//"+profilePath;
-    }
-
-    public static String getBackdropImageUrl(String backdropPath) {
-        return "http://image.tmdb.org/t/p/w342//"+backdropPath;
+    /**
+     * Util method to provide the URL given the image path and image size
+     * @param imagePath - file name with extension of the image file
+     * @param imageSize - ImageSize enum to specify the image width required
+     * @return String which represents the full image url
+     */
+    public static String getImageUrl(String imagePath, ImageSize imageSize) {
+        return "http://image.tmdb.org/t/p/"+imageSize.size+"/" + imagePath;
     }
 }
