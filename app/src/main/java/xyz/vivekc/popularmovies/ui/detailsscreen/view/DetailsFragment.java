@@ -6,6 +6,7 @@ import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.view.LayoutInflater;
@@ -29,8 +30,10 @@ import xyz.vivekc.popularmovies.repository.api.ApiResponse;
 import xyz.vivekc.popularmovies.repository.api.ApiService;
 import xyz.vivekc.popularmovies.ui.detailsscreen.adapter.CastsAdapter;
 import xyz.vivekc.popularmovies.ui.detailsscreen.viewmodel.DetailsViewModel;
+import xyz.vivekc.popularmovies.util.ConnectionLiveData;
 
 public class DetailsFragment extends Fragment {
+    Snackbar noInternetBar;
 
     //MVVM and databinding stuff
     private DetailsViewModel viewModel;
@@ -80,12 +83,13 @@ public class DetailsFragment extends Fragment {
         setUpViewModel();
         setUpUI();
         setUpBackButton();
+        setupNetworkListener();
     }
 
     private void setUpBackButton() {
         binding.backButton.setOnClickListener(view -> {
             if (getActivity() != null) {
-                getActivity().supportFinishAfterTransition();
+                getActivity().onBackPressed();
             }
         });
     }
@@ -214,6 +218,28 @@ public class DetailsFragment extends Fragment {
         adapter.setCastList(cast);
         binding.castsGridView.setAdapter(adapter);
         binding.castsGridView.setLayoutManager(new GridLayoutManager(requireContext(), 3));
+    }
+
+    private void setupNetworkListener() {
+        ConnectionLiveData liveData = new ConnectionLiveData(requireContext());
+        liveData.observe(this, isConnected -> {
+            if (!isConnected) {
+                showSnackbar();
+            } else {
+                hideSnackbar();
+            }
+        });
+    }
+
+    private void showSnackbar() {
+        noInternetBar = Snackbar.make(binding.details, R.string.no_internet, Snackbar.LENGTH_INDEFINITE);
+        noInternetBar.show();
+    }
+
+    private void hideSnackbar() {
+        if(noInternetBar != null && noInternetBar.isShownOrQueued()) {
+            noInternetBar.dismiss();
+        }
     }
 
 }

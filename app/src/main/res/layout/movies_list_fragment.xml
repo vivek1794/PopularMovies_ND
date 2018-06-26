@@ -10,6 +10,10 @@
             type="xyz.vivekc.popularmovies.ui.listscreen.viewmodel.MoviesListViewModel" />
     </data>
 
+    <android.support.design.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/movieslist"
@@ -49,8 +53,8 @@
             android:layout_marginStart="@dimen/margin_start_end"
             android:layout_marginTop="@dimen/title_subtitle_gap"
             android:alpha="@dimen/subtitle_alpha"
-            android:textSize="@dimen/subtitle_text_size"
             android:text="@{viewModel.subTitleString}"
+            android:textSize="@dimen/subtitle_text_size"
             app:layout_constraintBottom_toTopOf="@+id/filter_ui"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/movie_database_title" />
@@ -90,7 +94,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/fav_film_filter"
                 app:layout_constraintStart_toEndOf="@+id/popular_films_filter"
-                app:layout_constraintTop_toTopOf="parent"/>
+                app:layout_constraintTop_toTopOf="parent" />
 
             <Button
                 android:id="@+id/fav_film_filter"
@@ -126,10 +130,10 @@
                 tools:spanCount="2" />
 
             <android.support.v4.widget.NestedScrollView
-                android:layout_width="match_parent"
                 android:id="@+id/animation_holder"
-                android:visibility="gone"
-                android:layout_height="match_parent">
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="gone">
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -147,12 +151,12 @@
                         android:layout_height="@dimen/animation_view_size" />
 
                     <TextView
+                        android:id="@+id/animation_text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/animation_view_text_margin_top"
                         android:gravity="center"
                         android:lineSpacingExtra="@dimen/animation_view_text_linespacing"
-                        android:id="@+id/animation_text"
                         android:text="@string/loading_data"
                         android:textSize="@dimen/subtitle_text_size"
                         android:textStyle="bold" />
@@ -161,6 +165,7 @@
             </android.support.v4.widget.NestedScrollView>
         </FrameLayout>
     </android.support.constraint.ConstraintLayout>
+    </android.support.design.widget.CoordinatorLayout>
 
 
 </layout>

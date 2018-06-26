@@ -8,6 +8,7 @@ import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
@@ -29,6 +30,7 @@ import xyz.vivekc.popularmovies.repository.api.ApiResponse;
 import xyz.vivekc.popularmovies.ui.detailsscreen.view.DetailsActivity;
 import xyz.vivekc.popularmovies.ui.listscreen.adapter.MovieListingAdapter;
 import xyz.vivekc.popularmovies.ui.listscreen.viewmodel.MoviesListViewModel;
+import xyz.vivekc.popularmovies.util.ConnectionLiveData;
 
 
 public class MoviesListFragment extends Fragment {
@@ -46,6 +48,7 @@ public class MoviesListFragment extends Fragment {
     public static MoviesListFragment newInstance() {
         return new MoviesListFragment();
     }
+    Snackbar noInternetBar;
 
     @Nullable
     @Override
@@ -68,7 +71,9 @@ public class MoviesListFragment extends Fragment {
         setUpAdapter(orientation * 2);
         fetchData();
         setupFilter();
+        setupNetworkListener();
     }
+
 
     private void setUpAdapter(int spanCount) {
 
@@ -144,9 +149,9 @@ public class MoviesListFragment extends Fragment {
         });
 
         //set the text content
-        if(animationFile.equalsIgnoreCase("error.json")) {
+        if (animationFile.equalsIgnoreCase("error.json")) {
             binding.animationText.setText(getString(R.string.error_loading_data));
-        } else if(animationFile.equalsIgnoreCase("loading.json")) {
+        } else if (animationFile.equalsIgnoreCase("loading.json")) {
             binding.animationText.setText(getString(R.string.loading_data));
         }
     }
@@ -226,5 +231,27 @@ public class MoviesListFragment extends Fragment {
         super.onConfigurationChanged(newConfig);
         int currentOrientation = getResources().getConfiguration().orientation;
         setUpAdapter(currentOrientation * 2);
+    }
+
+    private void setupNetworkListener() {
+        ConnectionLiveData liveData = new ConnectionLiveData(requireContext());
+        liveData.observe(this, isConnected -> {
+            if (!isConnected) {
+                showSnackbar();
+            } else {
+                hideSnackbar();
+            }
+        });
+    }
+
+    private void showSnackbar() {
+        noInternetBar = Snackbar.make(binding.getRoot(), R.string.no_internet, Snackbar.LENGTH_INDEFINITE);
+        noInternetBar.show();
+    }
+
+    private void hideSnackbar() {
+        if(noInternetBar != null && noInternetBar.isShownOrQueued()) {
+            noInternetBar.dismiss();
+        }
     }
 }

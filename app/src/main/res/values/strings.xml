@@ -18,5 +18,6 @@
     <string name="popular_filter_label">Popular</string>
     <string name="top_rated_filter_label">Top Rated</string>
     <string name="favourites_filter_label">Favourites</string>
+    <string name="no_internet">No internet connection. Please check your network connectivity</string>
 
 </resources>
