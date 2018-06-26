@@ -35,7 +35,7 @@
                 android:id="@+id/movie_poster"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/details_movie_poster_size"
-                android:alpha="dimen/movie_poster_alpha"
+                android:alpha="0.5"
                 android:scaleType="centerCrop"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
