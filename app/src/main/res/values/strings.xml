@@ -10,5 +10,13 @@
 
     <!-- content descriptions-->
     <string name="filter_movies_icon_content_description">Filter movies icon</string>
+    <string name="error_loading_data">Error loading movies from the server.\nCheck your internet connection</string>
+    <string name="loading_data">Loading the awesome movies for you!  Please wait!</string>
+    <string name="plot_summary">Plot Summary</string>
+    <string name="genres_label">Genres</string>
+    <string name="casts_label">Casts</string>
+    <string name="popular_filter_label">Popular</string>
+    <string name="top_rated_filter_label">Top Rated</string>
+    <string name="favourites_filter_label">Favourites</string>
 
 </resources>

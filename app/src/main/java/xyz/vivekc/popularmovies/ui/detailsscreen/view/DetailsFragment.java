@@ -79,6 +79,15 @@ public class DetailsFragment extends Fragment {
         setUpEntryTransition();
         setUpViewModel();
         setUpUI();
+        setUpBackButton();
+    }
+
+    private void setUpBackButton() {
+        binding.backButton.setOnClickListener(view -> {
+            if (getActivity() != null) {
+                getActivity().supportFinishAfterTransition();
+            }
+        });
     }
 
     /**

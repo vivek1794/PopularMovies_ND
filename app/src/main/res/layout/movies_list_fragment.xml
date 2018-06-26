@@ -71,9 +71,9 @@
                 style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="5dp"
+                android:layout_margin="@dimen/filter_label_padding"
                 android:background="@drawable/bottom_underline_selected_bg"
-                android:text="Popular"
+                android:text="@string/popular_filter_label"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/top_rated_films_filter"
                 app:layout_constraintHorizontal_chainStyle="packed"
@@ -85,21 +85,20 @@
                 style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:text="Top Rated"
+                android:layout_margin="@dimen/filter_label_padding"
+                android:text="@string/top_rated_filter_label"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/fav_film_filter"
                 app:layout_constraintStart_toEndOf="@+id/popular_films_filter"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:layout_editor_absoluteY="0dp" />
+                app:layout_constraintTop_toTopOf="parent"/>
 
             <Button
                 android:id="@+id/fav_film_filter"
                 style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:text="Favourites"
+                android:layout_margin="@dimen/filter_label_padding"
+                android:text="@string/favourites_filter_label"
                 android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -120,7 +119,7 @@
                 android:id="@+id/movies_listing_grid"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="@dimen/grid_top_margin"
                 android:visibility="visible"
                 tools:layoutManager="android.support.v7.widget.GridLayoutManager"
                 tools:listitem="@layout/movies_listing_item_layout"
@@ -129,6 +128,7 @@
             <android.support.v4.widget.NestedScrollView
                 android:layout_width="match_parent"
                 android:id="@+id/animation_holder"
+                android:visibility="gone"
                 android:layout_height="match_parent">
 
                 <LinearLayout
@@ -137,22 +137,23 @@
                     android:layout_gravity="center"
                     android:gravity="center"
                     android:orientation="vertical"
-                    android:padding="10dp"
-                    android:visibility="gone">
+                    android:padding="@dimen/animation_holder_padding"
+                    android:visibility="visible">
 
 
                     <com.airbnb.lottie.LottieAnimationView
                         android:id="@+id/animation_view"
-                        android:layout_width="150dp"
-                        android:layout_height="150dp" />
+                        android:layout_width="@dimen/animation_view_size"
+                        android:layout_height="@dimen/animation_view_size" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="20dp"
+                        android:layout_marginTop="@dimen/animation_view_text_margin_top"
                         android:gravity="center"
-                        android:lineSpacingExtra="8dp"
-                        android:text="Loading the awesome movies for you!\n Please wait!"
+                        android:lineSpacingExtra="@dimen/animation_view_text_linespacing"
+                        android:id="@+id/animation_text"
+                        android:text="@string/loading_data"
                         android:textSize="@dimen/subtitle_text_size"
                         android:textStyle="bold" />
 

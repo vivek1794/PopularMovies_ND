@@ -8,5 +8,36 @@
     <dimen name="card_elevation">10dp</dimen>
     <dimen name="card_corner_radius">10dp</dimen>
     <dimen name="cardview_margin">10dp</dimen>
+    <dimen name="cast_item_padding">10dp</dimen>
+    <dimen name="cast_profile_image_size">48dp</dimen>
+    <dimen name="details_movie_poster_size">200dp</dimen>
+    <dimen name="back_button_margin">16dp</dimen>
+    <dimen name="movie_details_card_horizontal_margin">30dp</dimen>
+    <dimen name="movie_details_card_top_margin">80dp</dimen>
+    <dimen name="movie_poster_width">130dp</dimen>
+    <dimen name="movie_poster_padding">10dp</dimen>
+    <dimen name="detail_movie_title_size">24sp</dimen>
+    <dimen name="movie_detail_top_margin">15dp</dimen>
+    <dimen name="movie_title_horizontal_margin">5dp</dimen>
+    <dimen name="small_icon_size">16dp</dimen>
+    <dimen name="section_title_margin">20dp</dimen>
+    <dimen name="section_title_textsize">22sp</dimen>
+    <dimen name="section_title_padding_bottom">6dp</dimen>
+    <dimen name="sub_section_title_horizontal_margin">20dp</dimen>
+    <dimen name="sub_section_title_top_margin">20dp</dimen>
+    <dimen name="sub_section_title_bottom_margin">10dp</dimen>
+    <dimen name="sub_section_top_margin">15dp</dimen>
+    <dimen name="line_spacing_plot_summary">6dp</dimen>
+    <dimen name="sub_section_title_textsize">18sp</dimen>
+    <dimen name="filter_label_padding">5dp</dimen>
+    <dimen name="grid_top_margin">10dp</dimen>
+    <dimen name="animation_holder_padding">10dp</dimen>
+    <dimen name="animation_view_size">150dp</dimen>
+    <dimen name="animation_view_text_margin_top">20dp</dimen>
+    <dimen name="animation_view_text_linespacing">8dp</dimen>
+    <dimen name="genre_chip_margin">4dp</dimen>
+    <dimen name="genre_chip_padding">5dp</dimen>
     <item name="subtitle_alpha" type="dimen" format="float">0.7</item>
+    <item name="cast_profile_alpha" type="dimen" format="float">0.8</item>
+    <item name="movie_poster_alpha" type="dimen" format="float">0.5</item>
 </resources>

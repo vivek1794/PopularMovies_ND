@@ -5,20 +5,19 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="10dp"
+    android:padding="@dimen/cast_item_padding"
     android:gravity="center_horizontal|top"
     android:orientation="vertical">
 
     <ImageView
-        android:layout_width="48dp"
-        android:layout_height="48dp"
+        android:layout_width="@dimen/cast_profile_image_size"
+        android:layout_height="@dimen/cast_profile_image_size"
         android:id="@+id/profile_image"
         android:src="@mipmap/ic_launcher_round" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="14sp"
         android:gravity="center"
         android:id="@+id/actor_name"
         android:textStyle="bold"
@@ -29,7 +28,7 @@
         android:textStyle="italic"
         android:textSize="12sp"
         android:gravity="center"
-        android:alpha="0.8"
+        android:alpha="@dimen/cast_profile_alpha"
         android:id="@+id/actor_character_name"
         tools:text="Tony Stark / Iron Man"/>
 </LinearLayout>

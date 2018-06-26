@@ -116,12 +116,8 @@ public class MoviesListFragment extends Fragment {
                             break;
                         }
 
-                        case ERROR: {
-                            startAnimation("error.json");
-                            break;
-                        }
-
                         case FAILURE: {
+                            startAnimation("error.json");
                             break;
                         }
                     }
@@ -146,6 +142,13 @@ public class MoviesListFragment extends Fragment {
                 binding.animationView.playAnimation();
             }
         });
+
+        //set the text content
+        if(animationFile.equalsIgnoreCase("error.json")) {
+            binding.animationText.setText(getString(R.string.error_loading_data));
+        } else if(animationFile.equalsIgnoreCase("loading.json")) {
+            binding.animationText.setText(getString(R.string.loading_data));
+        }
     }
 
     /**

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <TextView android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_margin="4dp"
-    android:padding="5dp"
+    android:layout_margin="@dimen/genre_chip_margin"
+    android:padding="@dimen/genre_chip_padding"
     android:background="@drawable/rounded_chip_drawable"
     xmlns:android="http://schemas.android.com/apk/res/android" />

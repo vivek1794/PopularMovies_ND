@@ -27,10 +27,10 @@ public class DetailsViewModel extends BaseViewModel {
      *  UI
      * ******************************************************************/
 
-    private ObservableField<String> movieTitle = new ObservableField<>();
-    private ObservableField<String> moviePlotSummary = new ObservableField<>();
-    private ObservableField<String> movieUserRating = new ObservableField<>();
-    private ObservableField<String> movieReleaseDate = new ObservableField<>();
+    public ObservableField<String> movieTitle = new ObservableField<>();
+    public ObservableField<String> moviePlotSummary = new ObservableField<>();
+    public ObservableField<String> movieUserRating = new ObservableField<>();
+    public ObservableField<String> movieReleaseDate = new ObservableField<>();
 
     public void setMovieDetails(MovieItem movieItem) {
         movieTitle.set(movieItem.title);
@@ -39,8 +39,8 @@ public class DetailsViewModel extends BaseViewModel {
         movieReleaseDate.set(getMovieReleaseDateString(movieItem.releaseDate));
     }
 
-    public String getMovieReleaseDateString(String releaseDate) {
-        DateFormat df = new SimpleDateFormat("yyyy-mm-dd", Locale.getDefault());
+    private String getMovieReleaseDateString(String releaseDate) {
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
         DateFormat outputDateFormat = new SimpleDateFormat("dd MMM, yyyy", Locale.getDefault());
         try {
             Date date = df.parse(releaseDate);
