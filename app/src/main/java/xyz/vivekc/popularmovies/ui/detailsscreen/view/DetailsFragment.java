@@ -16,6 +16,7 @@ import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
@@ -33,7 +34,6 @@ import xyz.vivekc.popularmovies.ui.detailsscreen.viewmodel.DetailsViewModel;
 import xyz.vivekc.popularmovies.util.ConnectionLiveData;
 
 public class DetailsFragment extends Fragment {
-    Snackbar noInternetBar;
 
     //MVVM and databinding stuff
     private DetailsViewModel viewModel;
@@ -224,22 +224,15 @@ public class DetailsFragment extends Fragment {
         ConnectionLiveData liveData = new ConnectionLiveData(requireContext());
         liveData.observe(this, isConnected -> {
             if (!isConnected) {
-                showSnackbar();
-            } else {
-                hideSnackbar();
+                showToast();
             }
         });
     }
 
-    private void showSnackbar() {
-        noInternetBar = Snackbar.make(binding.details, R.string.no_internet, Snackbar.LENGTH_INDEFINITE);
-        noInternetBar.show();
+    private void showToast() {
+        Toast.makeText(requireContext(),R.string.no_internet, Toast.LENGTH_LONG).show();
     }
 
-    private void hideSnackbar() {
-        if(noInternetBar != null && noInternetBar.isShownOrQueued()) {
-            noInternetBar.dismiss();
-        }
-    }
+
 
 }

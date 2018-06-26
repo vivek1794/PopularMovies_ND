@@ -15,6 +15,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.airbnb.lottie.LottieComposition;
 import com.airbnb.lottie.LottieDrawable;
@@ -48,7 +49,6 @@ public class MoviesListFragment extends Fragment {
     public static MoviesListFragment newInstance() {
         return new MoviesListFragment();
     }
-    Snackbar noInternetBar;
 
     @Nullable
     @Override
@@ -237,21 +237,14 @@ public class MoviesListFragment extends Fragment {
         ConnectionLiveData liveData = new ConnectionLiveData(requireContext());
         liveData.observe(this, isConnected -> {
             if (!isConnected) {
-                showSnackbar();
-            } else {
-                hideSnackbar();
+                showToast();
             }
         });
     }
 
-    private void showSnackbar() {
-        noInternetBar = Snackbar.make(binding.getRoot(), R.string.no_internet, Snackbar.LENGTH_INDEFINITE);
-        noInternetBar.show();
+    private void showToast() {
+        Toast.makeText(requireContext(), R.string.no_internet, Toast.LENGTH_LONG).show();
     }
 
-    private void hideSnackbar() {
-        if(noInternetBar != null && noInternetBar.isShownOrQueued()) {
-            noInternetBar.dismiss();
-        }
-    }
+
 }
